@@ -2,22 +2,18 @@
 using Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Tools;
 using System;
+using Microsoft.Office.Tools.Outlook;
+using System.Collections.Generic;
+using Microsoft.Office.Core;
 
 namespace SmartTech_Addin
 {
     public partial class ThisAddIn
     {
-        private CustomTaskPane myCustomTaskPane;
         private Outlook.Inspectors inspectors;
         private Outlook.MailItem selectedEmail;
+        public SmartTachAiRibbon RibbonInstance { get; set; }
 
-        public CustomTaskPane TaskPane
-        {
-            get
-            {
-                return myCustomTaskPane;
-            }
-        }
         public Outlook.MailItem SelectedEmail
         {
             get
@@ -31,18 +27,20 @@ namespace SmartTech_Addin
             return new SmartTachAiRibbon();
         }
 
+        public void InvalidateRibbon()
+        {
+            if (Globals.ThisAddIn.RibbonInstance != null)
+            {
+                Globals.ThisAddIn.RibbonInstance.Invalidate();
+            }
+        }
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Outlook.Explorer explorer = this.Application.ActiveExplorer();
             explorer.SelectionChange += new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(Explorer_SelectionChange);
 
-            /*
-              myCustomTaskPane.Visible = true;
-
-             inspectors = this.Application.Inspectors;
-             inspectors.NewInspector +=
-             new Microsoft.Office.Interop.Outlook.InspectorsEvents_NewInspectorEventHandler(Inspectors_NewInspector);
-             */
+            this.Application.Inspectors.NewInspector += Inspectors_NewInspector;
         }
 
         private void Explorer_SelectionChange()
@@ -59,20 +57,27 @@ namespace SmartTech_Addin
                     selectedEmail = (Outlook.MailItem)selectedItem;
                 }
             }
+            InvalidateRibbon();
+
         }
 
         private void Inspectors_NewInspector(Inspector Inspector)
         {
-            Outlook.MailItem mailItem = Inspector.CurrentItem as Outlook.MailItem;
-            if (mailItem != null)
-            {
-                if (mailItem.EntryID == null)
-                {
-                    mailItem.Subject = "This text was added by using code";
-                    mailItem.Body = "This text was added by using code";
-                }
+            ((Outlook.InspectorEvents_10_Event)Inspector).Activate += Inspector_Activate;
+        }
 
+        private void Inspector_Activate()
+        {
+            Outlook.Inspector inspector = this.Application.ActiveInspector();
+            if (inspector != null)
+            {
+                Outlook.MailItem mailItem = inspector.CurrentItem as Outlook.MailItem;
+                if (mailItem != null)
+                {
+                    selectedEmail = mailItem;
+                }
             }
+            InvalidateRibbon();
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)

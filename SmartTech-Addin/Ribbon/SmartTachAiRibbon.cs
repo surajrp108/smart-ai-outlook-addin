@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 using Office = Microsoft.Office.Core;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SmartTech_Addin.Forms;
+using System.Net.Http.Headers;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace SmartTech_Addin
 {
@@ -14,7 +17,6 @@ namespace SmartTech_Addin
     public class SmartTachAiRibbon : Office.IRibbonExtensibility
     {
         private Office.IRibbonUI ribbon;
-        private static readonly HttpClient client = new HttpClient();
 
         public SmartTachAiRibbon()
         {
@@ -30,24 +32,59 @@ namespace SmartTech_Addin
         #endregion
 
         #region Ribbon Callbacks
+        public void Invalidate()
+        {
+            this.ribbon?.Invalidate();
+        }
+
         public void Ribbon_Load(Office.IRibbonUI ribbonUI)
         {
             this.ribbon = ribbonUI;
-        }
-
-        public void onClickDraftBtn(IRibbonControl control)
-        {
-            DraftReplyAllAsync();
+            Globals.ThisAddIn.RibbonInstance = this;
         }
 
         public void onClickSummarizeBtn(IRibbonControl control)
         {
-            Globals.ThisAddIn.TaskPane.Visible = true;
+            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
+            if (mailItem != null)
+            {
+
+                var popup = new SummarizeForm();
+                popup.Subject = mailItem.Subject;
+                popup.Message = mailItem.HTMLBody;
+                popup.OnDraftClick = DraftReplyAllAsync;
+                popup.Show();
+            }
+
+        }
+        public void onClickDraftBtn(IRibbonControl control)
+        {
+            //DraftReplyAllAsync("replyText");
         }
 
         public void onClickRepharse(IRibbonControl control)
         {
             DraftReplyWithAttachment();
+        }
+
+        public bool GetReadModeButtonEnabled(IRibbonControl control)
+        {
+            return isReadOnlyMode();
+        }
+        public bool GetDraftModeButtonEnabled(IRibbonControl control)
+        {
+            return !isReadOnlyMode();
+        }
+       
+        public bool isReadOnlyMode()
+        {
+            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
+            if (mailItem.EntryID == null) // Newly created mail item (reply or reply all)
+            {
+                //if (mailItem.Subject.StartsWith("RE:") || mailItem.Subject.StartsWith("FW:")) else Draft
+                return false;
+            }
+            return true;
         }
 
         public bool isEmailSelected() 
@@ -57,17 +94,13 @@ namespace SmartTech_Addin
             return email;
         }
 
-        private async Task DraftReplyAllAsync()
+        private async Task DraftReplyAllAsync(string replyText)
         {
-            string url = "https://google.com/";
-            //string response = await GetApiDataAsync(url);
-            //Console.WriteLine(response);
-
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
             if (mailItem != null)
             {
                 var replyAll = mailItem.ReplyAll();
-                replyAll.HTMLBody = "hello" + "\n" + replyAll.HTMLBody;
+                replyAll.HTMLBody = replyText + replyAll.HTMLBody;
                 replyAll.Display();
             }
         }
@@ -84,15 +117,45 @@ namespace SmartTech_Addin
             }
         }
 
-
-        async Task<string> GetApiDataAsync(string url)
+        private string GetSelecteEmailTempSavedPath()
         {
-            HttpResponseMessage response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode(); // Throw an exception if the status code is not 2xx
+            string tempPath = null;
+            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
 
-            string responseBody = await response.Content.ReadAsStringAsync();
-            return responseBody;
+            if (mailItem != null)
+            {
+                tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".msg");
+                mailItem.SaveAs(tempPath, Outlook.OlSaveAsType.olMSG);
+            }
+            
         }
+
+        private async Task SendMailAsAttachmentAsync()
+        {
+            String path = GetSelecteEmailTempSavedPath();
+            byte[] fileData = File.ReadAllBytes(path); 
+
+            using (var client = new HttpClient())
+            using (var content = new MultipartFormDataContent())
+            {
+                var fileContent = new ByteArrayContent(fileData);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                content.Add(fileContent, "file", Path.GetFileName(path));
+
+                string apiUrl = "https://your-api-endpoint.com/upload";
+
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    // Handle success
+                }
+                else
+                {
+                    // Handle error
+                }
+            }
+        }
+        
 
         #endregion
 
