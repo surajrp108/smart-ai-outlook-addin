@@ -55,14 +55,14 @@ namespace SmartTech_Addin
                 var popup = new SummarizeForm();
                 popup.Subject = mailItem.Subject;
                 popup.Message = mailItem.HTMLBody;
-                popup.OnDraftClick = DraftReplyAllAsync;
+                popup.OnDraftClick = drafReplayAll;
                 popup.Show();
             }
 
         }
-        public void onClickDraftBtn(IRibbonControl control)
+        public void onClickAiSuggestion(IRibbonControl control)
         {
-            DraftReplyAllAsync("replyText");
+            smartAiFecthResponse();
         }
 
         public void onClickRepharse(IRibbonControl control)
@@ -78,7 +78,7 @@ namespace SmartTech_Addin
         {
             return !isReadOnlyMode();
         }
-       
+
         public bool isReadOnlyMode()
         {
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
@@ -90,24 +90,51 @@ namespace SmartTech_Addin
             return true;
         }
 
-        public bool isEmailSelected() 
+        public bool isEmailSelected()
         {
             var application = Globals.ThisAddIn.SelectedEmail;
             bool email = application != null;
             return email;
         }
 
-        private async Task DraftReplyAllAsync(string replyText)
+        private void smartAiFecthResponse()
         {
+            LoaderForm form = new LoaderForm();
+            form.Show();
+            var (path, rdStr) = GetSelecteEmailTempSavedPath();
+            string response = ExecuteCommand("C:\\Windows\\System32\\curl.exe", "curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: abc.msg\" -F file=@\"" + path + "\" http://149.34.253.243:46206/image");
+            form.Close();
+
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
             if (mailItem != null)
             {
-                var replyAll = mailItem.ReplyAll();
-                replyAll.HTMLBody = replyText + replyAll.HTMLBody;
-                replyAll.Display();
+                DraftAiResponse draftAiResponse = new DraftAiResponse();
+                draftAiResponse.Subject = mailItem.Subject;
+                draftAiResponse.Message = response;
+                draftAiResponse.drafReply = (message) => { 
+                    draftAiResponse.Close(); 
+                    drafReplayAll(message); 
+                };
+                draftAiResponse.Show();
+            }
+        }
 
-                var (path, rdStr) = GetSelecteEmailTempSavedPath();
-                ExecuteCommand("C:\\Windows\\System32\\curl.exe", "curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: abc.msg\" -F file=@\"" + path + "\" http://149.34.253.243:46206/image");
+        private void drafReplayAll(string replyText)
+        {
+
+            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
+            if (mailItem != null)
+            {
+                try
+                {
+                    var replyAll = mailItem.ReplyAll();
+                    replyAll.HTMLBody = replyText + replyAll.HTMLBody;
+                    replyAll.Display();
+                }
+                catch (System.Exception e)
+                {
+                    MessageBox.Show(e.Message, "error");
+                }
             }
         }
 
@@ -139,35 +166,53 @@ namespace SmartTech_Addin
 
         Process commandProcess = null;
 
-        public bool ExecuteCommand(string curlExePath, string commandLineArguments, bool isReturn = true)
+        string ExecuteCommand(string curlExePath, string commandLineArguments, bool isReturn = true)
         {
             Console.WriteLine(commandLineArguments);
 
-            bool result = true;
-          
-                commandProcess = new Process();
-                commandProcess.StartInfo.UseShellExecute = false;
-                commandProcess.StartInfo.FileName = curlExePath; // this is the path of curl where it is installed;    
-                commandProcess.StartInfo.Arguments = commandLineArguments; // your curl command    
-                commandProcess.StartInfo.CreateNoWindow = true;
-                commandProcess.StartInfo.RedirectStandardInput = true;
-                commandProcess.StartInfo.RedirectStandardOutput = true;
-                commandProcess.StartInfo.RedirectStandardError = true;
-                commandProcess.Start();
 
-                var line = "";
-                while (!commandProcess.StandardOutput.EndOfStream)
-                {
-                    line += commandProcess.StandardOutput.ReadLine();
-                    
-                }
-                commandProcess.WaitForExit();
-                var lastStandardOutput = line;
-            MessageBox.Show(line);
-            //string error = commandProcess.StandardError;
+            commandProcess = new Process();
+            commandProcess.StartInfo.UseShellExecute = false;
+            commandProcess.StartInfo.FileName = curlExePath; // this is the path of curl where it is installed;    
+            commandProcess.StartInfo.Arguments = commandLineArguments; // your curl command    
+            commandProcess.StartInfo.CreateNoWindow = true;
+            commandProcess.StartInfo.RedirectStandardInput = false;
+            commandProcess.StartInfo.RedirectStandardOutput = true;
+            commandProcess.StartInfo.RedirectStandardError = true;
+            commandProcess.Start();
+
+            string response = "";
+            string error = "";
+            while (!commandProcess.HasExited)
+            {
+                response += commandProcess.StandardOutput.ReadToEnd();
+                error += commandProcess.StandardError.ReadToEnd();
+            }
+            /*
+                        var line = "";
+                            while (!commandProcess.StandardOutput.EndOfStream)
+                            {
+                                line += commandProcess.StandardOutput.ReadLine();
+
+                            }*/
+            commandProcess.WaitForExit();
             commandProcess.Close();
-            
-            return false;
+
+            string finalResult = "";
+            if (String.IsNullOrEmpty(response) || String.IsNullOrEmpty(error))
+            {
+                finalResult = "Response is not comming from Bedrock";
+            }
+            else if (String.IsNullOrEmpty(response))
+            {
+                finalResult = error;
+            }
+            else
+            {
+                finalResult = response;
+            }
+
+            return finalResult;
         }
 
         #endregion

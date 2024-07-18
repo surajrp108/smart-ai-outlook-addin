@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.mainTable = new System.Windows.Forms.TableLayoutPanel();
+            this.drftAiResponseLbl = new System.Windows.Forms.Label();
             this.subjectLbl = new System.Windows.Forms.Label();
             this.subjectBox = new System.Windows.Forms.TextBox();
-            this.drftAiResponseLbl = new System.Windows.Forms.Label();
             this.mainContentPanel = new System.Windows.Forms.Panel();
-            this.mainButtonPanel = new System.Windows.Forms.Panel();
             this.messageBox = new System.Windows.Forms.WebBrowser();
+            this.mainButtonPanel = new System.Windows.Forms.Panel();
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.draftReplyBtn = new System.Windows.Forms.Button();
             this.cpy2ClipBoardBtn = new System.Windows.Forms.Button();
+            this.draftReplyBtn = new System.Windows.Forms.Button();
             this.mainTable.SuspendLayout();
             this.mainContentPanel.SuspendLayout();
             this.mainButtonPanel.SuspendLayout();
@@ -62,6 +62,17 @@
             this.mainTable.Size = new System.Drawing.Size(800, 450);
             this.mainTable.TabIndex = 0;
             // 
+            // drftAiResponseLbl
+            // 
+            this.drftAiResponseLbl.AutoSize = true;
+            this.drftAiResponseLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.drftAiResponseLbl.Location = new System.Drawing.Point(3, 26);
+            this.drftAiResponseLbl.Name = "drftAiResponseLbl";
+            this.drftAiResponseLbl.Size = new System.Drawing.Size(115, 424);
+            this.drftAiResponseLbl.TabIndex = 2;
+            this.drftAiResponseLbl.Text = "AI Response";
+            this.drftAiResponseLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // subjectLbl
             // 
             this.subjectLbl.AutoSize = true;
@@ -82,17 +93,6 @@
             this.subjectBox.Size = new System.Drawing.Size(673, 20);
             this.subjectBox.TabIndex = 1;
             // 
-            // drftAiResponseLbl
-            // 
-            this.drftAiResponseLbl.AutoSize = true;
-            this.drftAiResponseLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.drftAiResponseLbl.Location = new System.Drawing.Point(3, 26);
-            this.drftAiResponseLbl.Name = "drftAiResponseLbl";
-            this.drftAiResponseLbl.Size = new System.Drawing.Size(115, 424);
-            this.drftAiResponseLbl.TabIndex = 2;
-            this.drftAiResponseLbl.Text = "AI Response";
-            this.drftAiResponseLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // mainContentPanel
             // 
             this.mainContentPanel.Controls.Add(this.messageBox);
@@ -103,15 +103,6 @@
             this.mainContentPanel.Size = new System.Drawing.Size(673, 418);
             this.mainContentPanel.TabIndex = 3;
             // 
-            // mainButtonPanel
-            // 
-            this.mainButtonPanel.Controls.Add(this.buttonPanel);
-            this.mainButtonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.mainButtonPanel.Location = new System.Drawing.Point(0, 380);
-            this.mainButtonPanel.Name = "mainButtonPanel";
-            this.mainButtonPanel.Size = new System.Drawing.Size(673, 38);
-            this.mainButtonPanel.TabIndex = 0;
-            // 
             // messageBox
             // 
             this.messageBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -120,6 +111,15 @@
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(673, 380);
             this.messageBox.TabIndex = 1;
+            // 
+            // mainButtonPanel
+            // 
+            this.mainButtonPanel.Controls.Add(this.buttonPanel);
+            this.mainButtonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.mainButtonPanel.Location = new System.Drawing.Point(0, 380);
+            this.mainButtonPanel.Name = "mainButtonPanel";
+            this.mainButtonPanel.Size = new System.Drawing.Size(673, 38);
+            this.mainButtonPanel.TabIndex = 0;
             // 
             // buttonPanel
             // 
@@ -131,15 +131,6 @@
             this.buttonPanel.Size = new System.Drawing.Size(243, 38);
             this.buttonPanel.TabIndex = 0;
             // 
-            // draftReplyBtn
-            // 
-            this.draftReplyBtn.Location = new System.Drawing.Point(159, 6);
-            this.draftReplyBtn.Name = "draftReplyBtn";
-            this.draftReplyBtn.Size = new System.Drawing.Size(75, 23);
-            this.draftReplyBtn.TabIndex = 0;
-            this.draftReplyBtn.Text = "Draft this";
-            this.draftReplyBtn.UseVisualStyleBackColor = true;
-            // 
             // cpy2ClipBoardBtn
             // 
             this.cpy2ClipBoardBtn.Location = new System.Drawing.Point(65, 6);
@@ -148,6 +139,17 @@
             this.cpy2ClipBoardBtn.TabIndex = 1;
             this.cpy2ClipBoardBtn.Text = "Copy";
             this.cpy2ClipBoardBtn.UseVisualStyleBackColor = true;
+            this.cpy2ClipBoardBtn.Click += new System.EventHandler(this.cpy2ClipBoardBtn_Click);
+            // 
+            // draftReplyBtn
+            // 
+            this.draftReplyBtn.Location = new System.Drawing.Point(159, 6);
+            this.draftReplyBtn.Name = "draftReplyBtn";
+            this.draftReplyBtn.Size = new System.Drawing.Size(75, 23);
+            this.draftReplyBtn.TabIndex = 0;
+            this.draftReplyBtn.Text = "Draft this";
+            this.draftReplyBtn.UseVisualStyleBackColor = true;
+            this.draftReplyBtn.Click += new System.EventHandler(this.draftReplyBtn_Click);
             // 
             // DraftAiResponse
             // 

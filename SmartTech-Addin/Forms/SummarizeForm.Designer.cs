@@ -184,7 +184,7 @@ namespace SmartTech_Addin.Forms
             explainMoreBtn.Name = "explainMoreBtn" + index;
             explainMoreBtn.Size = new System.Drawing.Size(92, 33);
             explainMoreBtn.Location = new System.Drawing.Point(10, 3);
-            explainMoreBtn.Text = "Explain More";
+            explainMoreBtn.Text = "AI Suggestion";
             explainMoreBtn.UseVisualStyleBackColor = true;
             explainMoreBtn.Click += new System.EventHandler(explainMoreBtn_Click);
 

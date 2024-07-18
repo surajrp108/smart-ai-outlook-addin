@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SmartTech_Addin.Forms
@@ -42,7 +36,7 @@ namespace SmartTech_Addin.Forms
             }
         }
 
-        public Func<string, Task> OnDraftClick { get; internal set; }
+        public Action<string> OnDraftClick { get; internal set; }
 
         public SummarizeForm()
         {
