@@ -212,6 +212,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="ApiHandler.cs" />
     <Compile Include="Forms\DraftAiResponse.cs">
       <SubType>Form</SubType>
     </Compile>

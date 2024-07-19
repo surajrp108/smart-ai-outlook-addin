@@ -13,6 +13,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 using System.Windows.Forms;
 using System.Data.Common;
 using System.Diagnostics;
+using static System.Net.WebRequestMethods;
 
 namespace SmartTech_Addin
 {
@@ -20,6 +21,7 @@ namespace SmartTech_Addin
     public class SmartTachAiRibbon : Office.IRibbonExtensibility
     {
         private Office.IRibbonUI ribbon;
+        private ApiHandler apiHandler = new ApiHandler();
 
         public SmartTachAiRibbon()
         {
@@ -34,49 +36,10 @@ namespace SmartTech_Addin
 
         #endregion
 
-        #region Ribbon Callbacks
+        #region Ribbon Functions
         public void Invalidate()
         {
             this.ribbon?.Invalidate();
-        }
-
-        public void Ribbon_Load(Office.IRibbonUI ribbonUI)
-        {
-            this.ribbon = ribbonUI;
-            Globals.ThisAddIn.RibbonInstance = this;
-        }
-
-        public void onClickSummarizeBtn(IRibbonControl control)
-        {
-            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
-            if (mailItem != null)
-            {
-
-                var popup = new SummarizeForm();
-                popup.Subject = mailItem.Subject;
-                popup.Message = mailItem.HTMLBody;
-                popup.OnDraftClick = drafReplayAll;
-                popup.Show();
-            }
-
-        }
-        public void onClickAiSuggestion(IRibbonControl control)
-        {
-            smartAiFecthResponse();
-        }
-
-        public void onClickRepharse(IRibbonControl control)
-        {
-            DraftReplyWithAttachment();
-        }
-
-        public bool GetReadModeButtonEnabled(IRibbonControl control)
-        {
-            return isReadOnlyMode();
-        }
-        public bool GetDraftModeButtonEnabled(IRibbonControl control)
-        {
-            return !isReadOnlyMode();
         }
 
         public bool isReadOnlyMode()
@@ -97,28 +60,6 @@ namespace SmartTech_Addin
             return email;
         }
 
-        private void smartAiFecthResponse()
-        {
-            LoaderForm form = new LoaderForm();
-            form.Show();
-            var (path, rdStr) = GetSelecteEmailTempSavedPath();
-            string response = ExecuteCommand("C:\\Windows\\System32\\curl.exe", "curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: abc.msg\" -F file=@\"" + path + "\" http://149.34.253.243:46206/image");
-            form.Close();
-
-            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
-            if (mailItem != null)
-            {
-                DraftAiResponse draftAiResponse = new DraftAiResponse();
-                draftAiResponse.Subject = mailItem.Subject;
-                draftAiResponse.Message = response;
-                draftAiResponse.drafReply = (message) => { 
-                    draftAiResponse.Close(); 
-                    drafReplayAll(message); 
-                };
-                draftAiResponse.Show();
-            }
-        }
-
         private void drafReplayAll(string replyText)
         {
 
@@ -128,7 +69,7 @@ namespace SmartTech_Addin
                 try
                 {
                     var replyAll = mailItem.ReplyAll();
-                    replyAll.HTMLBody = replyText + replyAll.HTMLBody;
+                    replyAll.Body = replyText + replyAll.HTMLBody;
                     replyAll.Display();
                 }
                 catch (System.Exception e)
@@ -138,82 +79,61 @@ namespace SmartTech_Addin
             }
         }
 
-        private void DraftReplyWithAttachment()
+
+        #region Component Event Handling
+        public void Ribbon_Load(Office.IRibbonUI ribbonUI)
         {
+            this.ribbon = ribbonUI;
+            Globals.ThisAddIn.RibbonInstance = this;
+        }
+
+        public void onClickAiSuggestion(IRibbonControl control)
+        {
+            LoaderForm form = new LoaderForm();
+            form.Show();
+            var response = this.apiHandler.getAiSuggestResponse(Globals.ThisAddIn.SelectedEmail);
+            form.Close();
+
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
             if (mailItem != null)
             {
-                var reply = mailItem.Reply();
-                reply.Body = "Hello";
-                reply.Attachments.Add(mailItem, OlAttachmentType.olEmbeddeditem);
-                reply.Display();
+                DraftAiResponse draftAiResponse = new DraftAiResponse();
+                draftAiResponse.Subject = mailItem.Subject;
+                draftAiResponse.Message = response;
+                draftAiResponse.drafReply = (message) =>
+                {
+                    draftAiResponse.Close();
+                    drafReplayAll(message);
+                };
+                draftAiResponse.Show();
             }
         }
 
-        private (string, string) GetSelecteEmailTempSavedPath()
+        public void onClickRepharse(IRibbonControl control)
         {
-            string tempPath = null;
-            string uuid = Guid.NewGuid().ToString();
-            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
-
-            if (mailItem != null)
+            if (isReadOnlyMode())
             {
-                tempPath = Path.Combine(Path.GetTempPath(), uuid + ".msg");
-                mailItem.SaveAs(tempPath, Outlook.OlSaveAsType.olMSG);
+                MessageBox.Show("Only allowed on Daft email");
+                return;
             }
-            return (tempPath, uuid.Substring(0, 6));
         }
 
-        Process commandProcess = null;
-
-        string ExecuteCommand(string curlExePath, string commandLineArguments, bool isReturn = true)
+        public void onClickSummarizeBtn(IRibbonControl control)
         {
-            Console.WriteLine(commandLineArguments);
+            var mailItem = Globals.ThisAddIn.SelectedEmail;
+            LoaderForm form = new LoaderForm();
+            form.Show();
+            var response = this.apiHandler.getAiSuggestResponse(mailItem);
+            form.Close();
 
+            var popup = new SummarizeForm();
+            popup.Subject = mailItem.Subject;
+            popup.InitialMessage = mailItem.Body;
+            popup.OnDraftClick = drafReplayAll;
+            popup.Show();
 
-            commandProcess = new Process();
-            commandProcess.StartInfo.UseShellExecute = false;
-            commandProcess.StartInfo.FileName = curlExePath; // this is the path of curl where it is installed;    
-            commandProcess.StartInfo.Arguments = commandLineArguments; // your curl command    
-            commandProcess.StartInfo.CreateNoWindow = true;
-            commandProcess.StartInfo.RedirectStandardInput = false;
-            commandProcess.StartInfo.RedirectStandardOutput = true;
-            commandProcess.StartInfo.RedirectStandardError = true;
-            commandProcess.Start();
-
-            string response = "";
-            string error = "";
-            while (!commandProcess.HasExited)
-            {
-                response += commandProcess.StandardOutput.ReadToEnd();
-                error += commandProcess.StandardError.ReadToEnd();
-            }
-            /*
-                        var line = "";
-                            while (!commandProcess.StandardOutput.EndOfStream)
-                            {
-                                line += commandProcess.StandardOutput.ReadLine();
-
-                            }*/
-            commandProcess.WaitForExit();
-            commandProcess.Close();
-
-            string finalResult = "";
-            if (String.IsNullOrEmpty(response) || String.IsNullOrEmpty(error))
-            {
-                finalResult = "Response is not comming from Bedrock";
-            }
-            else if (String.IsNullOrEmpty(response))
-            {
-                finalResult = error;
-            }
-            else
-            {
-                finalResult = response;
-            }
-
-            return finalResult;
         }
+        #endregion
 
         #endregion
 

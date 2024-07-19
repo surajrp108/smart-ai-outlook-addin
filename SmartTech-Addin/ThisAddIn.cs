@@ -63,7 +63,15 @@ namespace SmartTech_Addin
 
         private void Inspectors_NewInspector(Inspector Inspector)
         {
-            ((Outlook.InspectorEvents_10_Event)Inspector).Activate += Inspector_Activate;
+            if (Inspector.CurrentItem is Outlook.MailItem)
+            {
+                /*var currentInspector = Inspector;
+                var currentMailItem = (Outlook.MailItem)Inspector.CurrentItem;
+                currentMailItem.Open += new Outlook.ItemEvents_10_OpenEventHandler(CurrentMailItem_Open);
+                currentMailItem.Write += new Outlook.ItemEvents_10_WriteEventHandler(CurrentMailItem_Write);
+                currentMailItem.Close += new Outlook.ItemEvents_10_CloseEventHandler(CurrentMailItem_Close);
+                ((Outlook.InspectorEvents_10_Event)Inspector).Activate += Inspector_Activate;*/
+            }           
         }
 
         private void Inspector_Activate()

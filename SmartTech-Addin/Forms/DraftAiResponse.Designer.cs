@@ -33,7 +33,7 @@
             this.subjectLbl = new System.Windows.Forms.Label();
             this.subjectBox = new System.Windows.Forms.TextBox();
             this.mainContentPanel = new System.Windows.Forms.Panel();
-            this.messageBox = new System.Windows.Forms.WebBrowser();
+            this.messageBox = new System.Windows.Forms.RichTextBox();
             this.mainButtonPanel = new System.Windows.Forms.Panel();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.cpy2ClipBoardBtn = new System.Windows.Forms.Button();
@@ -175,7 +175,7 @@
         private System.Windows.Forms.TextBox subjectBox;
         private System.Windows.Forms.Label drftAiResponseLbl;
         private System.Windows.Forms.Panel mainContentPanel;
-        private System.Windows.Forms.WebBrowser messageBox;
+        private System.Windows.Forms.RichTextBox messageBox;
         private System.Windows.Forms.Panel mainButtonPanel;
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Button cpy2ClipBoardBtn;

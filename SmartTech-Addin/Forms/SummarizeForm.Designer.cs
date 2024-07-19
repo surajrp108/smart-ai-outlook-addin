@@ -32,11 +32,25 @@ namespace SmartTech_Addin.Forms
         private void InitializeComponent()
         {
             this.mainTbl = new System.Windows.Forms.TableLayoutPanel();
+            this.mainContentPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.aiSuggestPanel = new System.Windows.Forms.Panel();
+            this.aiSuggestTextBox = new System.Windows.Forms.RichTextBox();
+            this.aiSuggestBtnMainPanel = new System.Windows.Forms.Panel();
+            this.aiSuggestionDraftReplyBtn = new System.Windows.Forms.Button();
+            this.sumrraizePanel = new System.Windows.Forms.Panel();
+            this.summraizeTextBox = new System.Windows.Forms.RichTextBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.sumarrizeAiSuggestBtn = new System.Windows.Forms.Button();
+            this.sumarrizeDraftReplyBtn = new System.Windows.Forms.Button();
             this.subjectLbl = new System.Windows.Forms.Label();
             this.summarizationLbl = new System.Windows.Forms.Label();
             this.subjectBox = new System.Windows.Forms.RichTextBox();
-            this.mainContentPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.mainTbl.SuspendLayout();
+            this.mainContentPanel.SuspendLayout();
+            this.aiSuggestPanel.SuspendLayout();
+            this.aiSuggestBtnMainPanel.SuspendLayout();
+            this.sumrraizePanel.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTbl
@@ -44,18 +58,118 @@ namespace SmartTech_Addin.Forms
             this.mainTbl.ColumnCount = 2;
             this.mainTbl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 9.89011F));
             this.mainTbl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90.10989F));
+            this.mainTbl.Controls.Add(this.mainContentPanel, 1, 1);
             this.mainTbl.Controls.Add(this.subjectLbl, 0, 0);
             this.mainTbl.Controls.Add(this.summarizationLbl, 0, 1);
             this.mainTbl.Controls.Add(this.subjectBox, 1, 0);
-            this.mainTbl.Controls.Add(this.mainContentPanel, 1, 1);
             this.mainTbl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTbl.Location = new System.Drawing.Point(0, 0);
             this.mainTbl.Name = "mainTbl";
             this.mainTbl.RowCount = 2;
             this.mainTbl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.854839F));
             this.mainTbl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.14516F));
-            this.mainTbl.Size = new System.Drawing.Size(1227, 626);
+            this.mainTbl.Size = new System.Drawing.Size(1305, 727);
             this.mainTbl.TabIndex = 0;
+            // 
+            // mainContentPanel
+            // 
+            this.mainContentPanel.AutoScroll = true;
+            this.mainContentPanel.Controls.Add(this.aiSuggestPanel);
+            this.mainContentPanel.Controls.Add(this.sumrraizePanel);
+            this.mainContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainContentPanel.Location = new System.Drawing.Point(132, 52);
+            this.mainContentPanel.Name = "mainContentPanel";
+            this.mainContentPanel.Size = new System.Drawing.Size(1170, 672);
+            this.mainContentPanel.TabIndex = 9;
+            // 
+            // aiSuggestPanel
+            // 
+            this.aiSuggestPanel.Controls.Add(this.aiSuggestTextBox);
+            this.aiSuggestPanel.Controls.Add(this.aiSuggestBtnMainPanel);
+            this.aiSuggestPanel.Location = new System.Drawing.Point(3, 3);
+            this.aiSuggestPanel.Name = "aiSuggestPanel";
+            this.aiSuggestPanel.Size = new System.Drawing.Size(1106, 589);
+            this.aiSuggestPanel.TabIndex = 9;
+            this.aiSuggestPanel.Visible = false;
+            // 
+            // aiSuggestTextBox
+            // 
+            this.aiSuggestTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.aiSuggestTextBox.Location = new System.Drawing.Point(0, 0);
+            this.aiSuggestTextBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.aiSuggestTextBox.Name = "aiSuggestTextBox";
+            this.aiSuggestTextBox.Size = new System.Drawing.Size(1106, 553);
+            this.aiSuggestTextBox.TabIndex = 1;
+            this.aiSuggestTextBox.Text = "";
+            // 
+            // aiSuggestBtnMainPanel
+            // 
+            this.aiSuggestBtnMainPanel.Controls.Add(this.aiSuggestionDraftReplyBtn);
+            this.aiSuggestBtnMainPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aiSuggestBtnMainPanel.Location = new System.Drawing.Point(0, 553);
+            this.aiSuggestBtnMainPanel.Name = "aiSuggestBtnMainPanel";
+            this.aiSuggestBtnMainPanel.Size = new System.Drawing.Size(1106, 36);
+            this.aiSuggestBtnMainPanel.TabIndex = 0;
+            // 
+            // aiSuggestionDraftReplyBtn
+            // 
+            this.aiSuggestionDraftReplyBtn.Dock = System.Windows.Forms.DockStyle.Right;
+            this.aiSuggestionDraftReplyBtn.Location = new System.Drawing.Point(1031, 0);
+            this.aiSuggestionDraftReplyBtn.Name = "aiSuggestionDraftReplyBtn";
+            this.aiSuggestionDraftReplyBtn.Size = new System.Drawing.Size(75, 36);
+            this.aiSuggestionDraftReplyBtn.TabIndex = 0;
+            this.aiSuggestionDraftReplyBtn.Text = "Draft Reply";
+            this.aiSuggestionDraftReplyBtn.UseVisualStyleBackColor = true;
+            this.aiSuggestionDraftReplyBtn.Click += new System.EventHandler(this.aiSuggestionDraftReplyBtn_Click);
+            // 
+            // sumrraizePanel
+            // 
+            this.sumrraizePanel.Controls.Add(this.summraizeTextBox);
+            this.sumrraizePanel.Controls.Add(this.panel2);
+            this.sumrraizePanel.Location = new System.Drawing.Point(3, 598);
+            this.sumrraizePanel.Name = "sumrraizePanel";
+            this.sumrraizePanel.Size = new System.Drawing.Size(1106, 589);
+            this.sumrraizePanel.TabIndex = 10;
+            // 
+            // summraizeTextBox
+            // 
+            this.summraizeTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.summraizeTextBox.Location = new System.Drawing.Point(0, 0);
+            this.summraizeTextBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 20);
+            this.summraizeTextBox.Name = "summraizeTextBox";
+            this.summraizeTextBox.Size = new System.Drawing.Size(1106, 547);
+            this.summraizeTextBox.TabIndex = 1;
+            this.summraizeTextBox.Text = "";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.sumarrizeAiSuggestBtn);
+            this.panel2.Controls.Add(this.sumarrizeDraftReplyBtn);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 553);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1106, 36);
+            this.panel2.TabIndex = 0;
+            // 
+            // sumarrizeAiSuggestBtn
+            // 
+            this.sumarrizeAiSuggestBtn.Location = new System.Drawing.Point(950, 0);
+            this.sumarrizeAiSuggestBtn.Name = "sumarrizeAiSuggestBtn";
+            this.sumarrizeAiSuggestBtn.Size = new System.Drawing.Size(75, 36);
+            this.sumarrizeAiSuggestBtn.TabIndex = 1;
+            this.sumarrizeAiSuggestBtn.Text = "AI Suggest";
+            this.sumarrizeAiSuggestBtn.UseVisualStyleBackColor = true;
+            this.sumarrizeAiSuggestBtn.Click += new System.EventHandler(this.sumarrizeAiSuggestBtn_Click);
+            // 
+            // sumarrizeDraftReplyBtn
+            // 
+            this.sumarrizeDraftReplyBtn.Location = new System.Drawing.Point(1031, 0);
+            this.sumarrizeDraftReplyBtn.Name = "sumarrizeDraftReplyBtn";
+            this.sumarrizeDraftReplyBtn.Size = new System.Drawing.Size(75, 36);
+            this.sumarrizeDraftReplyBtn.TabIndex = 0;
+            this.sumarrizeDraftReplyBtn.Text = "Draft Reply";
+            this.sumarrizeDraftReplyBtn.UseVisualStyleBackColor = true;
+            this.sumarrizeDraftReplyBtn.Click += new System.EventHandler(this.sumarrizeDraftReplyBtn_Click);
             // 
             // subjectLbl
             // 
@@ -63,7 +177,7 @@ namespace SmartTech_Addin.Forms
             this.subjectLbl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.subjectLbl.Location = new System.Drawing.Point(3, 0);
             this.subjectLbl.Name = "subjectLbl";
-            this.subjectLbl.Size = new System.Drawing.Size(115, 42);
+            this.subjectLbl.Size = new System.Drawing.Size(123, 49);
             this.subjectLbl.TabIndex = 0;
             this.subjectLbl.Text = "Subject";
             this.subjectLbl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -72,10 +186,10 @@ namespace SmartTech_Addin.Forms
             // 
             this.summarizationLbl.AutoSize = true;
             this.summarizationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.summarizationLbl.Location = new System.Drawing.Point(3, 42);
+            this.summarizationLbl.Location = new System.Drawing.Point(3, 49);
             this.summarizationLbl.Name = "summarizationLbl";
             this.summarizationLbl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.summarizationLbl.Size = new System.Drawing.Size(115, 584);
+            this.summarizationLbl.Size = new System.Drawing.Size(123, 678);
             this.summarizationLbl.TabIndex = 2;
             this.summarizationLbl.Text = "Summarization";
             this.summarizationLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -84,37 +198,30 @@ namespace SmartTech_Addin.Forms
             // 
             this.subjectBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.subjectBox.Enabled = false;
-            this.subjectBox.Location = new System.Drawing.Point(124, 3);
+            this.subjectBox.Location = new System.Drawing.Point(132, 3);
             this.subjectBox.Name = "subjectBox";
-            this.subjectBox.Size = new System.Drawing.Size(1100, 36);
+            this.subjectBox.Size = new System.Drawing.Size(1170, 43);
             this.subjectBox.TabIndex = 7;
             this.subjectBox.Text = "";
-            // 
-            // mainContentPanel
-            // 
-            this.mainContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainContentPanel.Location = new System.Drawing.Point(124, 45);
-            this.mainContentPanel.Name = "mainContentPanel";
-            this.mainContentPanel.Size = new System.Drawing.Size(1100, 578);
-            this.mainContentPanel.TabIndex = 8;
-            this.mainContentPanel.FlowDirection = FlowDirection.TopDown;
-            this.mainContentPanel.WrapContents = false;
-            this.mainContentPanel.AutoScroll = true;
             // 
             // SummarizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1227, 626);
+            this.ClientSize = new System.Drawing.Size(1305, 727);
             this.Controls.Add(this.mainTbl);
             this.Name = "SummarizeForm";
             this.Text = "Summarize";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
+            this.Resize += new System.EventHandler(this.MainForm_SizeChanged);
             this.mainTbl.ResumeLayout(false);
             this.mainTbl.PerformLayout();
+            this.mainContentPanel.ResumeLayout(false);
+            this.aiSuggestPanel.ResumeLayout(false);
+            this.aiSuggestBtnMainPanel.ResumeLayout(false);
+            this.sumrraizePanel.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
-
-            this.SizeChanged += new EventHandler(MainForm_SizeChanged);
-            this.Resize += new EventHandler(MainForm_SizeChanged);
 
         }
 
@@ -122,95 +229,27 @@ namespace SmartTech_Addin.Forms
         {
             foreach (Control ctrl in mainContentPanel.Controls)
             {
-                ctrl.Size = new System.Drawing.Size(mainContentPanel.Width, ctrl.Height);
+                ctrl.Size = new System.Drawing.Size(mainContentPanel.Width-40, ctrl.Height);
             }
         }
-
-        public void addEmptyContentPanel(int index)
-        {
-
-            System.Windows.Forms.Panel contentPanel = new System.Windows.Forms.Panel();
-            System.Windows.Forms.WebBrowser messageBox = new System.Windows.Forms.WebBrowser();
-            System.Windows.Forms.Panel buttonMainPanel = new System.Windows.Forms.Panel();
-            System.Windows.Forms.Panel buttonPanel = new System.Windows.Forms.Panel();
-            System.Windows.Forms.Button draftResponseBtn = new System.Windows.Forms.Button();
-            System.Windows.Forms.Button explainMoreBtn = new System.Windows.Forms.Button();
-
-            contentPanel.SuspendLayout();
-            buttonMainPanel.SuspendLayout();
-            buttonPanel.SuspendLayout();
-
-            // 
-            // contentPanel
-            // 
-            contentPanel.Controls.Add(messageBox);
-            contentPanel.Controls.Add(buttonMainPanel);
-            contentPanel.Name = "contentPanel"+index;
-            contentPanel.Size = new System.Drawing.Size(mainContentPanel.Width, 498);
-            // 
-            // messageBox
-            // 
-            messageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            messageBox.MinimumSize = new System.Drawing.Size(20, 20);
-            messageBox.Name = "messageBox" + index;
-            messageBox.Size = new System.Drawing.Size(833, 457);
-            // 
-            // buttonMainPanel
-            // 
-            buttonMainPanel.Controls.Add(buttonPanel);
-            buttonMainPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            buttonMainPanel.Name = "buttonMainPanel" + index;
-            buttonMainPanel.Size = new System.Drawing.Size(833, 41);
-            // 
-            // buttonPanel
-            // 
-            buttonPanel.Controls.Add(draftResponseBtn);
-            buttonPanel.Controls.Add(explainMoreBtn);
-            buttonPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            buttonPanel.Name = "buttonPanel" + index;
-            buttonPanel.Size = new System.Drawing.Size(200, 41);
-            // 
-            // DraftResponseBtn
-            // 
-            draftResponseBtn.Name = "DraftResponseBtn" + index;
-            draftResponseBtn.Size = new System.Drawing.Size(75, 33);
-            draftResponseBtn.Location = new System.Drawing.Point(110, 3);
-            draftResponseBtn.Text = "Draft Reply";
-            draftResponseBtn.UseVisualStyleBackColor = true;
-            draftResponseBtn.Click += new System.EventHandler(DraftResponseBtn_Click);
-            // 
-            // explainMoreBtn
-            // 
-            explainMoreBtn.Name = "explainMoreBtn" + index;
-            explainMoreBtn.Size = new System.Drawing.Size(92, 33);
-            explainMoreBtn.Location = new System.Drawing.Point(10, 3);
-            explainMoreBtn.Text = "AI Suggestion";
-            explainMoreBtn.UseVisualStyleBackColor = true;
-            explainMoreBtn.Click += new System.EventHandler(explainMoreBtn_Click);
-
-            contentPanel.ResumeLayout(false);
-            buttonMainPanel.ResumeLayout(false);
-            buttonPanel.ResumeLayout(false);
-
-            int controlHeight = contentPanel.Height;
-            foreach (Control ctrl in mainContentPanel.Controls)
-            {
-                ctrl.Top += controlHeight;
-            }
-            contentPanel.Top = 0;
-            this.mainContentPanel.Controls.Add(contentPanel);
-            this.mainContentPanel.Controls.SetChildIndex(contentPanel, 0);
-            this.mainContentPanel.AutoScrollPosition = new System.Drawing.Point(0, 0);
-        }
-
 
 
         #endregion
+        
 
         private System.Windows.Forms.TableLayoutPanel mainTbl;
-        private System.Windows.Forms.Label subjectLbl;
         private System.Windows.Forms.Label summarizationLbl;
         private System.Windows.Forms.RichTextBox subjectBox;
-        private System.Windows.Forms.FlowLayoutPanel mainContentPanel;
+        private Label subjectLbl;
+        private FlowLayoutPanel mainContentPanel;
+        private Panel aiSuggestPanel;
+        private Panel aiSuggestBtnMainPanel;
+        private Button aiSuggestionDraftReplyBtn;
+        private RichTextBox aiSuggestTextBox;
+        private Panel sumrraizePanel;
+        private RichTextBox summraizeTextBox;
+        private Panel panel2;
+        private Button sumarrizeDraftReplyBtn;
+        private Button sumarrizeAiSuggestBtn;
     }
 }

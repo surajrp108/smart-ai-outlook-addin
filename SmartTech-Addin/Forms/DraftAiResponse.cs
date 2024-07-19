@@ -31,7 +31,7 @@ namespace SmartTech_Addin.Forms
             set
             {
                 message = value;
-                messageBox.DocumentText = value;
+                messageBox.Text = value;
             }
         }
 
@@ -49,7 +49,7 @@ namespace SmartTech_Addin.Forms
         {
             if(drafReply != null)
             {
-                drafReply.Invoke(Message);
+                drafReply.Invoke(messageBox.Text);
             }
         }
     }
