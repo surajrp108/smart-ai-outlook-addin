@@ -1,12 +1,9 @@
 ﻿using Microsoft.Office.Interop.Outlook;
 using SmartTech_Addin.Forms;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -49,6 +46,23 @@ namespace SmartTech_Addin
             finally
             {
                 form.Close();
+                form = null;
+            }
+        }
+
+        public string getRepharse(string emailBody)
+        {
+            try
+            {
+                form = new LoaderForm();
+                form.Show();
+                string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" {url}/rephrase";
+                return ExecuteCommand(curlCmdAiSuggest);
+            }
+            finally
+            {
+                form.Close();
+                form = null;
             }
         }
 
@@ -88,7 +102,12 @@ namespace SmartTech_Addin
                 finalResult = response;
             }
 
-            return finalResult;
+            return parse(finalResult);
+        }
+
+        private string parse(string text)
+        {
+            return Regex.Replace(text, @"(\r\n|\r)", "\n");
         }
     }
 }

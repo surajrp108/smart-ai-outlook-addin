@@ -104,7 +104,15 @@ namespace SmartTech_Addin
                 return;
             }
 
+            var emailBody = Globals.ThisAddIn.SelectedEmail.Body;
+            int indexOfDraft = emailBody.IndexOf("\r\nFrom:");
 
+            if (indexOfDraft >= 0)
+            {
+                string draftPart = emailBody.Substring(0, indexOfDraft).Trim();
+                string repepharse = apiHandler.getRepharse(draftPart);
+                MessageBox.Show(repepharse);
+            }
         }
 
         public void onClickSummarizeBtn(IRibbonControl control)
