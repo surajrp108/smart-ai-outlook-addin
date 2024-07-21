@@ -61,5 +61,10 @@ namespace SmartTech_Addin.Forms
         {
             OnDraftClick(aiSuggestTextBox.Text);
         }
+
+        private void okBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

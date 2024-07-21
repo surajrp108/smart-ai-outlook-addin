@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Outlook;
+using SmartTech_Addin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace SmartTech_Addin
 {
     internal class ApiHandler
     {
+        private LoaderForm form;
         private string url = "http://ec2-23-22-34-167.compute-1.amazonaws.com:52991";
         private string curlExePath = "C:\\Windows\\System32\\curl.exe";
 
@@ -35,9 +37,19 @@ namespace SmartTech_Addin
 
         public string getAiSuggestResponse(MailItem mail)
         {
-            var (path, rdStr) = GetSelecteEmailTempSavedPath(mail);
-            string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: {rdStr}\" -F file=@\"{path}\" {url}/image";
-            return ExecuteCommand(curlCmdAiSuggest);
+            try
+            {
+                form = new LoaderForm();
+                form.Show();
+
+                var (path, rdStr) = GetSelecteEmailTempSavedPath(mail);
+                string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: {rdStr}\" -F file=@\"{path}\" {url}/processmsg";
+                return ExecuteCommand(curlCmdAiSuggest);
+            }
+            finally
+            {
+                form.Close();
+            }
         }
 
         private string ExecuteCommand(string commandLineArguments)

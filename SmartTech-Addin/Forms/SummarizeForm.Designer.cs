@@ -159,6 +159,7 @@ namespace SmartTech_Addin.Forms
             this.sumarrizeAiSuggestBtn.TabIndex = 1;
             this.sumarrizeAiSuggestBtn.Text = "AI Suggest";
             this.sumarrizeAiSuggestBtn.UseVisualStyleBackColor = true;
+            this.sumarrizeAiSuggestBtn.Visible = false;
             this.sumarrizeAiSuggestBtn.Click += new System.EventHandler(this.sumarrizeAiSuggestBtn_Click);
             // 
             // sumarrizeDraftReplyBtn
@@ -169,6 +170,7 @@ namespace SmartTech_Addin.Forms
             this.sumarrizeDraftReplyBtn.TabIndex = 0;
             this.sumarrizeDraftReplyBtn.Text = "Draft Reply";
             this.sumarrizeDraftReplyBtn.UseVisualStyleBackColor = true;
+            this.sumarrizeDraftReplyBtn.Visible = false;
             this.sumarrizeDraftReplyBtn.Click += new System.EventHandler(this.sumarrizeDraftReplyBtn_Click);
             // 
             // subjectLbl

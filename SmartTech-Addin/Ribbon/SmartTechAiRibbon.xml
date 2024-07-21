@@ -4,22 +4,22 @@
 		<tabs>
 			<tab idMso="TabReadMessage" >
 				<group id="customGroup1" label="AI Actions">
-					<button id="draftBtn1" label="AI Suggestion" onAction="onClickAiSuggestion" />
-					<button id="summarizeBtn1" label="Summarize Email" onAction="onClickSummarizeBtn" />
+					<button id="draftBtn1" label="AI Suggest" onAction="onClickAiSuggestion" />
+					<button id="summarizeBtn1" label="AI Summarize" onAction="onClickSummarizeBtn" />
 					<button id="repharseBtn1" label="Repharse Email" onAction="onClickRepharse" />
 				</group>
 			</tab>
 			<tab idMso="TabMail" >
 				<group id="customGroup2" label="AI Actions">
-					<button id="draftBtn2" label="AI Suggestion" onAction="onClickAiSuggestion" />
-					<button id="summarizeBtn2" label="Summarize Email" onAction="onClickSummarizeBtn"  />
+					<button id="draftBtn2" label="AI Suggest" onAction="onClickAiSuggestion" />
+					<button id="summarizeBtn2" label="AI Summarize" onAction="onClickSummarizeBtn"  />
 					<button id="repharseBtn2" label="Repharse Email" onAction="onClickRepharse" />
 				</group>
 			</tab>
 			<tab idMso="TabNewMailMessage" >
 				<group id="customGroup3" label="AI Actions">
-					<button id="draftBtn3" label="AI Suggestion" onAction="onClickAiSuggestion" />
-					<button id="summarizeBtn3" label="Summarize Email" onAction="onClickSummarizeBtn" />
+					<button id="draftBtn3" label="AI Suggest" onAction="onClickAiSuggestion" />
+					<button id="summarizeBtn3" label="AI Summarize" onAction="onClickSummarizeBtn" />
 					<button id="repharseBtn3" label="Repharse Email" onAction="onClickRepharse"  />
 				</group>
 			</tab>

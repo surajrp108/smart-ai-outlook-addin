@@ -5,21 +5,54 @@ using System;
 using Microsoft.Office.Tools.Outlook;
 using System.Collections.Generic;
 using Microsoft.Office.Core;
+using System.Windows.Forms;
 
 namespace SmartTech_Addin
 {
     public partial class ThisAddIn
     {
-        private Outlook.Inspectors inspectors;
-        private Outlook.MailItem selectedEmail;
+        private string draftEmailText = null;
+
+        private Outlook.Explorers explorers;
+        private Outlook.Explorer currentExplorer;
+        private Outlook.MailItem selectedMailItem;
+        private Outlook.MailItem editModeMailItem;
+        private string originalBodyOfOpenEmail;
+
+        private string OpenedEmailLastContent
+        {
+
+            get
+            {
+                return originalBodyOfOpenEmail;
+            }
+        }
+
         public SmartTachAiRibbon RibbonInstance { get; set; }
 
         public Outlook.MailItem SelectedEmail
         {
             get
             {
-                return selectedEmail;
+                return selectedMailItem;
             }
+        }
+
+        public string DraftEmailText
+        {
+            get { return GetUserAddedContent(selectedMailItem?.Body, editModeMailItem?.Body); }
+        }
+
+
+        private string GetUserAddedContent(string original, string current)
+        {
+            if (string.IsNullOrEmpty(original)) return current;
+            if (!current.StartsWith(original))
+            {
+                var lastindex = current.IndexOf(original);
+                return current.Substring(0, lastindex);
+            }
+            return current;
         }
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
@@ -37,61 +70,123 @@ namespace SmartTech_Addin
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            Outlook.Explorer explorer = this.Application.ActiveExplorer();
-            explorer.SelectionChange += new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(Explorer_SelectionChange);
+            explorers = this.Application.Explorers;
+            explorers.NewExplorer += new Outlook.ExplorersEvents_NewExplorerEventHandler(Explorers_NewExplorer);
+            this.Application.ItemLoad += new ApplicationEvents_11_ItemLoadEventHandler(ItemLoad);
 
+            // Setup the initial explorer
+            currentExplorer = this.Application.ActiveExplorer();
+            AttachExplorerEvents(currentExplorer);
+
+            //New email
             this.Application.Inspectors.NewInspector += Inspectors_NewInspector;
         }
 
-        private void Explorer_SelectionChange()
+        private void ItemLoad(object Item)
         {
-            Outlook.Explorer explorer = this.Application.ActiveExplorer();
-            Outlook.Selection selection = explorer.Selection;
+            this.selectedMailItem= Item as MailItem;
+        }
 
+        private void AttachExplorerEvents(Explorer currentExplorer)
+        {
+            if (currentExplorer != null)
+            {
+                currentExplorer.SelectionChange += new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(CurrentExplorer_SelectionChange);
+            }
+        }
+
+        private void CurrentExplorer_SelectionChange()
+        {
+            Outlook.Selection selection = currentExplorer.Selection;
             if (selection.Count > 0)
             {
-                Object selectedItem = selection[1]; // Get the first selected item
-
-                if (selectedItem is Outlook.MailItem)
+                if (selection[1] is Outlook.MailItem)
                 {
-                    selectedEmail = (Outlook.MailItem)selectedItem;
+                    cleanupSelectedMailEvents();
+                    selectedMailItem = (Outlook.MailItem)selection[1];
+                    Outlook.Inspector inspector = selectedMailItem.GetInspector;
+                    ((ItemEvents_10_Event)selectedMailItem).Reply += new Outlook.ItemEvents_10_ReplyEventHandler(SelectedMailItem_Reply);
+                    ((ItemEvents_10_Event)selectedMailItem).ReplyAll += new Outlook.ItemEvents_10_ReplyAllEventHandler(SelectedMailItem_ReplyAll);
+                    ((ItemEvents_10_Event)selectedMailItem).Forward += new Outlook.ItemEvents_10_ForwardEventHandler(SelectedMailItem_Forward);
+                    ((ItemEvents_10_Event)selectedMailItem).Close += SelectedMailItem_Close;
+                    ((InspectorEvents_10_Event)inspector).Close += new Outlook.InspectorEvents_10_CloseEventHandler(Inspector_Close);
                 }
             }
-            InvalidateRibbon();
+        }
 
+        private void cleanupSelectedMailEvents()
+        {
+            if (selectedMailItem != null)
+            {
+                Outlook.Inspector inspector = selectedMailItem.GetInspector;
+                ((ItemEvents_10_Event)selectedMailItem).Reply -= new Outlook.ItemEvents_10_ReplyEventHandler(SelectedMailItem_Reply);
+                ((ItemEvents_10_Event)selectedMailItem).ReplyAll -= new Outlook.ItemEvents_10_ReplyAllEventHandler(SelectedMailItem_ReplyAll);
+                ((ItemEvents_10_Event)selectedMailItem).Forward -= new Outlook.ItemEvents_10_ForwardEventHandler(SelectedMailItem_Forward);
+                ((ItemEvents_10_Event)selectedMailItem).Close -= SelectedMailItem_Close;
+                ((InspectorEvents_10_Event)inspector).Close -= new Outlook.InspectorEvents_10_CloseEventHandler(Inspector_Close);
+            }
+        }
+
+        private void Inspector_Close()
+        {
+            cleanupSelectedMailEvents();
+        }
+
+        private void SelectedMailItem_Close(ref bool Cancel)
+        {
+            cleanupSelectedMailEvents();
+        }
+
+        private void SelectedMailItem_Forward(object Forward, ref bool Cancel)
+        {
+            this.editModeMailItem = Forward as MailItem;
+            CurrentMailItem_Open(ref Cancel);
+        }
+
+        private void SelectedMailItem_ReplyAll(object Response, ref bool Cancel)
+        {
+            this.editModeMailItem = Response as MailItem;
+            CurrentMailItem_Open(ref Cancel);
+        }
+
+        private void SelectedMailItem_Reply(object Response, ref bool Cancel)
+        {
+            this.editModeMailItem = Response as MailItem;
+            CurrentMailItem_Open(ref Cancel);
+        }
+
+        private void Explorers_NewExplorer(Explorer Explorer)
+        {
+            AttachExplorerEvents(Explorer);
         }
 
         private void Inspectors_NewInspector(Inspector Inspector)
         {
             if (Inspector.CurrentItem is Outlook.MailItem)
             {
-                /*var currentInspector = Inspector;
-                var currentMailItem = (Outlook.MailItem)Inspector.CurrentItem;
-                currentMailItem.Open += new Outlook.ItemEvents_10_OpenEventHandler(CurrentMailItem_Open);
-                currentMailItem.Write += new Outlook.ItemEvents_10_WriteEventHandler(CurrentMailItem_Write);
-                currentMailItem.Close += new Outlook.ItemEvents_10_CloseEventHandler(CurrentMailItem_Close);
-                ((Outlook.InspectorEvents_10_Event)Inspector).Activate += Inspector_Activate;*/
-            }           
+                var currentInspector = Inspector;
+                editModeMailItem = (Outlook.MailItem)Inspector.CurrentItem;
+                editModeMailItem.Open += new Outlook.ItemEvents_10_OpenEventHandler(CurrentMailItem_Open);
+                ((ItemEvents_10_Event)editModeMailItem).Close += SelectedMailItem_Close;
+            }
         }
 
-        private void Inspector_Activate()
+        private void CurrentMailItem_Open(ref bool Cancel)
         {
-            Outlook.Inspector inspector = this.Application.ActiveInspector();
-            if (inspector != null)
-            {
-                Outlook.MailItem mailItem = inspector.CurrentItem as Outlook.MailItem;
-                if (mailItem != null)
-                {
-                    selectedEmail = mailItem;
-                }
-            }
-            InvalidateRibbon();
+            originalBodyOfOpenEmail = editModeMailItem.Body;
         }
+
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            // Note: Outlook no longer raises this event. If you have code that 
-            //    must run when Outlook shuts down, see https://go.microsoft.com/fwlink/?LinkId=506785
+            if (currentExplorer != null)
+            {
+                currentExplorer.SelectionChange -= new Outlook.ExplorerEvents_10_SelectionChangeEventHandler(CurrentExplorer_SelectionChange);
+            }
+            Application.Inspectors.NewInspector -= Inspectors_NewInspector;
+
+            if (explorers != null)
+                explorers.NewExplorer -= new Outlook.ExplorersEvents_NewExplorerEventHandler(Explorers_NewExplorer);
         }
 
         #region VSTO generated code
@@ -105,7 +200,7 @@ namespace SmartTech_Addin
             this.Startup += new System.EventHandler(ThisAddIn_Startup);
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
         }
-        
+
         #endregion
     }
 }

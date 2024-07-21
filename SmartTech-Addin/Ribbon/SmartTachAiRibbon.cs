@@ -42,17 +42,6 @@ namespace SmartTech_Addin
             this.ribbon?.Invalidate();
         }
 
-        public bool isReadOnlyMode()
-        {
-            var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
-            if (mailItem.EntryID == null) // Newly created mail item (reply or reply all)
-            {
-                //if (mailItem.Subject.StartsWith("RE:") || mailItem.Subject.StartsWith("FW:")) else Draft
-                return false;
-            }
-            return true;
-        }
-
         public bool isEmailSelected()
         {
             var application = Globals.ThisAddIn.SelectedEmail;
@@ -89,10 +78,7 @@ namespace SmartTech_Addin
 
         public void onClickAiSuggestion(IRibbonControl control)
         {
-            LoaderForm form = new LoaderForm();
-            form.Show();
             var response = this.apiHandler.getAiSuggestResponse(Globals.ThisAddIn.SelectedEmail);
-            form.Close();
 
             var mailItem = Globals.ThisAddIn.SelectedEmail as MailItem;
             if (mailItem != null)
@@ -111,11 +97,14 @@ namespace SmartTech_Addin
 
         public void onClickRepharse(IRibbonControl control)
         {
-            if (isReadOnlyMode())
+            var email = Globals.ThisAddIn.SelectedEmail;
+            if(email == null || email.Saved || email.Sent)
             {
-                MessageBox.Show("Only allowed on Daft email");
+                MessageBox.Show("Repharse can be done on Drafting email");
                 return;
             }
+
+
         }
 
         public void onClickSummarizeBtn(IRibbonControl control)
@@ -133,6 +122,7 @@ namespace SmartTech_Addin
             popup.Show();
 
         }
+
         #endregion
 
         #endregion
