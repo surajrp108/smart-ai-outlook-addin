@@ -58,7 +58,7 @@ namespace SmartTech_Addin
                 try
                 {
                     var replyAll = mailItem.ReplyAll();
-                    replyAll.Body = replyText + replyAll.HTMLBody;
+                    replyAll.HTMLBody = parseBodyInHtml(replyText) + replyAll.HTMLBody;
                     replyAll.Display();
                 }
                 catch (System.Exception e)
@@ -110,8 +110,15 @@ namespace SmartTech_Addin
             if (indexOfDraft >= 0)
             {
                 string draftPart = emailBody.Substring(0, indexOfDraft).Trim();
-                string repepharse = apiHandler.getRepharse(draftPart);
-                MessageBox.Show(repepharse);
+                string repharseTxt = apiHandler.getRepharse(draftPart);
+                Repharse repharse = new Repharse();
+                repharse.Message = repharseTxt;
+                repharse.drafReply = (message) =>
+                {
+                    repharse.Close();
+                    drafReplayAll(message);
+                };
+                repharse.Show();
             }
         }
 
@@ -136,6 +143,11 @@ namespace SmartTech_Addin
         #endregion
 
         #region Helpers
+
+        private string parseBodyInHtml(string msg)
+        {
+            return msg.Replace("\n", "<br/>");
+        }
 
         private static string GetResourceText(string resourceName)
         {

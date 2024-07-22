@@ -50,13 +50,31 @@ namespace SmartTech_Addin
             }
         }
 
+        public string getAiSummarize(MailItem mail)
+        {
+            try
+            {
+                form = new LoaderForm();
+                form.Show();
+
+                var (path, rdStr) = GetSelecteEmailTempSavedPath(mail);
+                string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" -H \"fileref: {rdStr}\" -F file=@\"{path}\" {url}/summarize";
+                return ExecuteCommand(curlCmdAiSuggest);
+            }
+            finally
+            {
+                form.Close();
+                form = null;
+            }
+        }
+
         public string getRepharse(string emailBody)
         {
             try
             {
                 form = new LoaderForm();
                 form.Show();
-                string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" {url}/rephrase";
+                string curlCmdAiSuggest = $"curl -X POST -H \"Content-Type: multipart/form-data\" -F \"rephraseText={emailBody}\" {url}/rephrase";
                 return ExecuteCommand(curlCmdAiSuggest);
             }
             finally
@@ -102,12 +120,17 @@ namespace SmartTech_Addin
                 finalResult = response;
             }
 
-            return parse(finalResult);
+            string message = parse(finalResult);
+            return message;
         }
 
         private string parse(string text)
         {
-            return Regex.Replace(text, @"(\r\n|\r)", "\n");
+            if (text.StartsWith("\""))
+                text = text.Substring(1);
+            if (text.EndsWith("\"\n"))
+                text = text.Substring(0, text.Length - 2);
+            return Regex.Replace(text, @"(\r\n|\r|\\n)", "\n");
         }
     }
 }
