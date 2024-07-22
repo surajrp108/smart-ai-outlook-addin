@@ -34,18 +34,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 25);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(32, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(311, 31);
+            this.label1.Size = new System.Drawing.Size(74, 17);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Loading, Please wait...";
+            this.label1.Text = "Thinking...";
             // 
             // LoaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(336, 81);
+            this.ClientSize = new System.Drawing.Size(150, 47);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Name = "LoaderForm";

@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Data.Common;
 using System.Diagnostics;
 using static System.Net.WebRequestMethods;
+using System.Drawing;
 
 namespace SmartTech_Addin
 {
@@ -74,6 +75,8 @@ namespace SmartTech_Addin
         {
             this.ribbon = ribbonUI;
             Globals.ThisAddIn.RibbonInstance = this;
+
+
         }
 
         public void onClickAiSuggestion(IRibbonControl control)
@@ -100,7 +103,7 @@ namespace SmartTech_Addin
             var email = Globals.ThisAddIn.SelectedEmail;
             if(email == null || email.Saved || email.Sent)
             {
-                MessageBox.Show("Repharse can be done on Drafting email");
+                MessageBox.Show("Rephrasing can be done on the drafted email.");
                 return;
             }
 
@@ -127,12 +130,12 @@ namespace SmartTech_Addin
             var mailItem = Globals.ThisAddIn.SelectedEmail;
             LoaderForm form = new LoaderForm();
             form.Show();
-            var response = this.apiHandler.getAiSuggestResponse(mailItem);
+            var response = this.apiHandler.getAiSummarize(mailItem);
             form.Close();
 
             var popup = new SummarizeForm();
             popup.Subject = mailItem.Subject;
-            popup.InitialMessage = mailItem.Body;
+            popup.InitialMessage = response;
             popup.OnDraftClick = drafReplayAll;
             popup.Show();
 
@@ -143,6 +146,45 @@ namespace SmartTech_Addin
         #endregion
 
         #region Helpers
+
+        public Bitmap GetImage(Office.IRibbonControl control)
+        {
+            switch (control.Id)
+            {
+                case "draftBtn1":
+                case "draftBtn2":
+                case "draftBtn3":
+                    return LoadImageFromResource("SmartTech_Addin.images.suggest.png");
+                case "summarizeBtn1":
+                case "summarizeBtn2":
+                case "summarizeBtn3":
+                    return LoadImageFromResource("SmartTech_Addin.images.summary.png");
+                case "repharseBtn1":
+                case "repharseBtn2":
+                case "repharseBtn3":
+                    return LoadImageFromResource("SmartTech_Addin.images.repharse.png");
+                default:
+                    return null;
+            }
+        }
+
+        private Bitmap LoadImageFromResource(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    return new Bitmap(stream);
+                }
+                else
+                {
+                    throw new System.Exception("Resource not found: " + resourceName);
+                }
+            }
+        }
+
+
 
         private string parseBodyInHtml(string msg)
         {

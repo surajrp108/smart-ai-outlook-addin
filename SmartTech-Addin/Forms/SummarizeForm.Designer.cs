@@ -213,6 +213,7 @@ namespace SmartTech_Addin.Forms
             this.ClientSize = new System.Drawing.Size(1305, 727);
             this.Controls.Add(this.mainTbl);
             this.Name = "SummarizeForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Summarize";
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.Resize += new System.EventHandler(this.MainForm_SizeChanged);

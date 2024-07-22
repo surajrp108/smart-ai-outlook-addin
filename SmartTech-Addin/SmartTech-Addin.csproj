@@ -260,6 +260,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -285,7 +286,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Ribbon\SmartTechAiRibbon.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="images\suggest.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="images\summary.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="images\repharse.png" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

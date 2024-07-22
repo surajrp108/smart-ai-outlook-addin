@@ -111,6 +111,7 @@
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(673, 380);
             this.messageBox.TabIndex = 1;
+            this.messageBox.Text = "";
             // 
             // mainButtonPanel
             // 
@@ -158,7 +159,8 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.mainTable);
             this.Name = "DraftAiResponse";
-            this.Text = "DraftAiResponse";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Suggest";
             this.mainTable.ResumeLayout(false);
             this.mainTable.PerformLayout();
             this.mainContentPanel.ResumeLayout(false);

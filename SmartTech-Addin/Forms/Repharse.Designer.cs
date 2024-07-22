@@ -83,6 +83,7 @@
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.panel2);
             this.Name = "Repharse";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Repharse";
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
