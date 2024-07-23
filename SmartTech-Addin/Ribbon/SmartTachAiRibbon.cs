@@ -101,28 +101,32 @@ namespace SmartTech_Addin
         public void onClickRepharse(IRibbonControl control)
         {
             var email = Globals.ThisAddIn.SelectedEmail;
-            if(email == null || email.Saved || email.Sent)
+            if (email == null || email.Saved || email.Sent)
             {
                 MessageBox.Show("Rephrasing can be done on the drafted email.");
                 return;
             }
 
             var emailBody = Globals.ThisAddIn.SelectedEmail.Body;
-            int indexOfDraft = emailBody.IndexOf("\r\nFrom:");
+            var subject = Globals.ThisAddIn.SelectedEmail.Subject;
+            string draftPart = emailBody;
 
-            if (indexOfDraft >= 0)
+            if (subject!= null && (subject.StartsWith("RE:") || subject.StartsWith("FW:")))
             {
-                string draftPart = emailBody.Substring(0, indexOfDraft).Trim();
-                string repharseTxt = apiHandler.getRepharse(draftPart);
-                Repharse repharse = new Repharse();
-                repharse.Message = repharseTxt;
-                repharse.drafReply = (message) =>
-                {
-                    repharse.Close();
-                    drafReplayAll(message);
-                };
-                repharse.Show();
+                var indexOfDraft = emailBody.IndexOf("\r\nFrom:");
+                draftPart = indexOfDraft >= 0 ? emailBody.Substring(0, indexOfDraft).Trim() : null;
             }
+
+            string repharseTxt = apiHandler.getRepharse(draftPart);
+            Repharse repharse = new Repharse();
+            repharse.Message = repharseTxt;
+            repharse.drafReply = (message) =>
+            {
+                repharse.Close();
+                drafReplayAll(message);
+            };
+            repharse.Show();
+
         }
 
         public void onClickSummarizeBtn(IRibbonControl control)

@@ -88,9 +88,10 @@
             // 
             this.subjectBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.subjectBox.Enabled = false;
+            this.subjectBox.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subjectBox.Location = new System.Drawing.Point(124, 3);
             this.subjectBox.Name = "subjectBox";
-            this.subjectBox.Size = new System.Drawing.Size(673, 20);
+            this.subjectBox.Size = new System.Drawing.Size(673, 25);
             this.subjectBox.TabIndex = 1;
             // 
             // mainContentPanel
@@ -106,12 +107,13 @@
             // messageBox
             // 
             this.messageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.messageBox.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageBox.Location = new System.Drawing.Point(0, 0);
             this.messageBox.MinimumSize = new System.Drawing.Size(20, 20);
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(673, 380);
             this.messageBox.TabIndex = 1;
-            this.messageBox.Text = "";
+            this.messageBox.Text = "nfldsbflsdbfaf";
             // 
             // mainButtonPanel
             // 

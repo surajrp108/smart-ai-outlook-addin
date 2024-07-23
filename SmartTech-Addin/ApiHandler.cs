@@ -94,6 +94,7 @@ namespace SmartTech_Addin
             commandProcess.StartInfo.RedirectStandardInput = false;
             commandProcess.StartInfo.RedirectStandardOutput = true;
             commandProcess.StartInfo.RedirectStandardError = true;
+            commandProcess.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
             commandProcess.Start();
 
             string response = "";

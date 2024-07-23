@@ -1,5 +1,6 @@
 ﻿using Outlook = Microsoft.Office.Interop.Outlook;
 using Microsoft.Office.Interop.Outlook;
+using System;
 
 namespace SmartTech_Addin
 {
@@ -37,7 +38,16 @@ namespace SmartTech_Addin
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             this.Application.ItemLoad += new ApplicationEvents_11_ItemLoadEventHandler(ItemLoad);
-            //this.Application.Inspectors.NewInspector += Inspectors_NewInspector;
+            this.Application.Inspectors.NewInspector += Inspectors_NewInspector;
+        }
+
+        private void Inspectors_NewInspector(Inspector Inspector)
+        {
+            if (Inspector.CurrentItem is Outlook.MailItem)
+            {
+                var currentInspector = Inspector;
+                this.selectedMailItem = (Outlook.MailItem)Inspector.CurrentItem;
+            }
         }
 
         private void ItemLoad(object Item)
@@ -45,11 +55,9 @@ namespace SmartTech_Addin
             this.selectedMailItem = Item as MailItem;
         }
 
-
-
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            //Application.Inspectors.NewInspector -= Inspectors_NewInspector;
+            Application.Inspectors.NewInspector -= Inspectors_NewInspector;
             this.Application.ItemLoad -= new ApplicationEvents_11_ItemLoadEventHandler(ItemLoad);
         }
 

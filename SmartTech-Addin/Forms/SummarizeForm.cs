@@ -49,22 +49,14 @@ namespace SmartTech_Addin.Forms
             OnDraftClick(summraizeTextBox.Text);
         }
 
-        private void sumarrizeAiSuggestBtn_Click(object sender, EventArgs e)
-        {
-            //OnAiSuggestClick(summraizeTextBox.Text);
-            //Call API
-            this.aiSuggestPanel.Visible = true;
-            this.sumarrizeAiSuggestBtn.Enabled = false;
-        }
-
-        private void aiSuggestionDraftReplyBtn_Click(object sender, EventArgs e)
-        {
-            OnDraftClick(aiSuggestTextBox.Text);
-        }
-
         private void okBtn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void copyBtn_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(summraizeTextBox.Text);
         }
     }
 }
