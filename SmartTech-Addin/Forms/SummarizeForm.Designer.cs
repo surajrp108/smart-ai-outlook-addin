@@ -32,14 +32,14 @@ namespace SmartTech_Addin.Forms
         private void InitializeComponent()
         {
             this.mainTbl = new System.Windows.Forms.TableLayoutPanel();
-            this.subjectLbl = new System.Windows.Forms.Label();
-            this.summarizationLbl = new System.Windows.Forms.Label();
-            this.subjectBox = new System.Windows.Forms.RichTextBox();
             this.mainContentPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.sumrraizePanel = new System.Windows.Forms.Panel();
             this.summraizeTextBox = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.copyBtn = new System.Windows.Forms.Button();
+            this.subjectLbl = new System.Windows.Forms.Label();
+            this.summarizationLbl = new System.Windows.Forms.Label();
+            this.subjectBox = new System.Windows.Forms.RichTextBox();
             this.mainTbl.SuspendLayout();
             this.mainContentPanel.SuspendLayout();
             this.sumrraizePanel.SuspendLayout();
@@ -63,41 +63,6 @@ namespace SmartTech_Addin.Forms
             this.mainTbl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.14516F));
             this.mainTbl.Size = new System.Drawing.Size(1241, 645);
             this.mainTbl.TabIndex = 0;
-            // 
-            // subjectLbl
-            // 
-            this.subjectLbl.AutoSize = true;
-            this.subjectLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.subjectLbl.Location = new System.Drawing.Point(3, 0);
-            this.subjectLbl.Name = "subjectLbl";
-            this.subjectLbl.Size = new System.Drawing.Size(116, 44);
-            this.subjectLbl.TabIndex = 0;
-            this.subjectLbl.Text = "Subject";
-            this.subjectLbl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // summarizationLbl
-            // 
-            this.summarizationLbl.AutoSize = true;
-            this.summarizationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.summarizationLbl.Location = new System.Drawing.Point(3, 44);
-            this.summarizationLbl.Name = "summarizationLbl";
-            this.summarizationLbl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.summarizationLbl.Size = new System.Drawing.Size(116, 601);
-            this.summarizationLbl.TabIndex = 2;
-            this.summarizationLbl.Text = "Summarization";
-            this.summarizationLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // subjectBox
-            // 
-            this.subjectBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.subjectBox.Enabled = false;
-            this.subjectBox.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subjectBox.Location = new System.Drawing.Point(128, 3);
-            this.subjectBox.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
-            this.subjectBox.Name = "subjectBox";
-            this.subjectBox.Size = new System.Drawing.Size(1107, 38);
-            this.subjectBox.TabIndex = 7;
-            this.subjectBox.Text = "";
             // 
             // mainContentPanel
             // 
@@ -146,8 +111,42 @@ namespace SmartTech_Addin.Forms
             this.copyBtn.TabIndex = 0;
             this.copyBtn.Text = "Copy";
             this.copyBtn.UseVisualStyleBackColor = true;
-            this.copyBtn.Visible = false;
             this.copyBtn.Click += new System.EventHandler(this.copyBtn_Click);
+            // 
+            // subjectLbl
+            // 
+            this.subjectLbl.AutoSize = true;
+            this.subjectLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.subjectLbl.Location = new System.Drawing.Point(3, 0);
+            this.subjectLbl.Name = "subjectLbl";
+            this.subjectLbl.Size = new System.Drawing.Size(116, 44);
+            this.subjectLbl.TabIndex = 0;
+            this.subjectLbl.Text = "Subject";
+            this.subjectLbl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // summarizationLbl
+            // 
+            this.summarizationLbl.AutoSize = true;
+            this.summarizationLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.summarizationLbl.Location = new System.Drawing.Point(3, 44);
+            this.summarizationLbl.Name = "summarizationLbl";
+            this.summarizationLbl.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+            this.summarizationLbl.Size = new System.Drawing.Size(116, 601);
+            this.summarizationLbl.TabIndex = 2;
+            this.summarizationLbl.Text = "Summarization";
+            this.summarizationLbl.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // subjectBox
+            // 
+            this.subjectBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.subjectBox.Enabled = false;
+            this.subjectBox.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subjectBox.Location = new System.Drawing.Point(128, 3);
+            this.subjectBox.Margin = new System.Windows.Forms.Padding(6, 3, 6, 3);
+            this.subjectBox.Name = "subjectBox";
+            this.subjectBox.Size = new System.Drawing.Size(1107, 38);
+            this.subjectBox.TabIndex = 7;
+            this.subjectBox.Text = "";
             // 
             // SummarizeForm
             // 
